@@ -26,5 +26,20 @@ with app.app_context():
         except Exception as e:
             print(f"Error seeding line data: {e}")
 
+# Basic API endpoints to retrieve station and line data. I am not considering 
+# versioning or more complex RESTful design for this application.
+# Flask blueprints could be used to organize the endpoints if the application grows.
+
+# The following endpoints are primarily for the frontend to retrieve static station and line information
+@app.route("/api/stations", methods=["GET"])
+def get_stations():
+    stations = Station.query.all()
+    return jsonify([station.name for station in stations])
+
+@app.route("/api/lines", methods=["GET"])
+def get_lines():
+    lines = Line.query.all()
+    return jsonify([line.display_name for line in lines])
+
 if __name__ == "__main__":
     app.run(port=5001, debug=True)

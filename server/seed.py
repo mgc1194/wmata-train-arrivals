@@ -1,19 +1,13 @@
-import re
-import requests
-from config import Config
+# Seed script to populate the database with station and line data from 
+# the WMATA API. 
+
+import  wmata_client
 from models import db, Station, Line
 
-WMATA_BASE_URL = "https://api.wmata.com"
-HEADERS = {'api_key': Config.WMATA_API_KEY}
 
 def seed_stations():
-    try:
-        response = requests.get(WMATA_BASE_URL + "/Rail.svc/json/jStations", headers=HEADERS)
-    except requests.RequestException as e:
-        print(f"Error fetching station data: {e}")
-        return
-
-    stations_data = response.json()['Stations']
+    response = wmata_client.get("/Rail.svc/json/jStations")
+    stations_data = response['Stations']
     for s in stations_data:
         station = Station(
             code = s['Code'],
@@ -24,36 +18,31 @@ def seed_stations():
             line_code_4 = s['LineCode4'],
             lon = s['Lon'],
             name = s['Name'],
-            station_together_1 = s['StationTogether1'],
-            station_together_2 = s['StationTogether2'],
+            station_together_1 = s['StationTogether1'] or None,
+            station_together_2 = s['StationTogether2'] or None,
             city = s['Address']['City'],
             state = s['Address']['State'],
             street = s['Address']['Street'],
             zip = s['Address']['Zip']
         )
         db.session.add(station)
+
     db.session.commit()
-    pass
 
 def seed_lines():
-    try:
-        response = requests.get(WMATA_BASE_URL + "/Rail.svc/json/jLines", headers=HEADERS)
-    except requests.RequestException as e:
-        print(f"Error fetching line data: {e}")
-        return
-    lines_data = response.json()['Lines']
+    response = wmata_client.get("/Rail.svc/json/jLines")
+    lines_data = response['Lines']
 
     for l in lines_data:
         line = Line(
-            display_name = l.pop('DisplayName'),
-            end_station_code = l.pop('EndStationCode'),
-            internal_destination_1 = l.pop('InternalDestination1'),
-            internal_destination_2 = l.pop('InternalDestination2'),
-            line_code = l.pop('LineCode'),
-            start_station_code = l.pop('StartStationCode')
-
+            display_name = l['DisplayName'],
+            end_station_code = l['EndStationCode'],
+            internal_destination_1 = l['InternalDestination1'] or None,
+            internal_destination_2 = l['InternalDestination2'] or None,
+            line_code = l['LineCode'],
+            start_station_code = l['StartStationCode']
         )
         db.session.add(line)
 
     db.session.commit()
-    pass
+

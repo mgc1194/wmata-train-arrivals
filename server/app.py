@@ -1,12 +1,30 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from config import Config
+from models import db, Station, Line
+from seed import seed_stations, seed_lines
+
 
 app = Flask(__name__)
+app.config.from_object(Config)
 CORS(app, resources={r"/*": {"origins":"*"}})
 
-@app.route("/", methods=["GET"])
-def hello_world():
-    return jsonify("Hello World!")
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
+    if Station.query.count() == 0:
+        try:
+            seed_stations()
+        except Exception as e:
+            print(f"Error seeding station data: {e}")
+
+    if Line.query.count() == 0:
+        try:
+            seed_lines()
+        except Exception as e:
+            print(f"Error seeding line data: {e}")
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)

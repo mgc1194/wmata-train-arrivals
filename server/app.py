@@ -34,7 +34,7 @@ with app.app_context():
 @app.route("/api/stations", methods=["GET"])
 def get_stations():
     stations = Station.query.all()
-    return jsonify([station.name for station in stations])
+    return jsonify([station.get_station_for_dropdown() for station in stations])
 
 @app.route("/api/lines", methods=["GET"])
 def get_lines():

@@ -32,6 +32,9 @@ class Station(db.Model):
     street = db.Column(db.String(200), nullable=False)
     zip = db.Column(db.String(20), nullable=False)
 
+    def get_station_for_dropdown(self):
+        return {"label": self.name, "value": self.code}
+
 
 class Line(db.Model):
     __tablename__ = "metro_lines"

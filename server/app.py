@@ -40,12 +40,37 @@ def get_stations():
     stations = Station.query.all()
     return jsonify([station.get_station_for_dropdown() for station in stations])
 
-@app.route("/api/lines", methods=["GET"])
-def get_lines():
+@app.route("/api/stations/<station_code>", methods=["GET"])
+def get_station(station_code):
+    # This endpoint returns station information for a given station code.
+    station = Station.query.get(station_code)
+    if station:
+        return jsonify(station.get_station_for_display())
+    else:
+        return jsonify({"error": "Station not found"}), 404
+
+@app.route("/api/lines/<line_id>", methods=["GET"])
+def get_line(line_id):
     # This is a placeholder endpoint for line data. The frontend doesn't currently use line data, 
     # but this could be useful for future features like filtering stations by line or displaying line information.
-    lines = Line.query.all()
-    return jsonify([line.display_name for line in lines])
+    line = Line.query.get(line_id)
+    if line:
+        return jsonify(line.get_line_for_display())
+    else:
+        return jsonify({"error": "Line not found"}), 404
+
+@app.route("/api/arrivals/<station_code>", methods=["GET"])
+def get_train_arrivals(station_code):
+    station_prediction_response = wmata_client.get(f"/StationPrediction.svc/json/GetPrediction/{station_code}")
+    grouped_trains = {}
+    for train in station_prediction_response['Trains']:
+        grouped_trains.setdefault(train['Group'], []).append({
+            "line": train['Line'],
+            "destination_name": train['DestinationName'],
+            "minutes": train['Min'],
+            "car_count": train['Car'],
+        }) 
+    return jsonify(grouped_trains)
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)

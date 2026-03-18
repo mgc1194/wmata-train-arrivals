@@ -33,7 +33,13 @@ class Station(db.Model):
     zip = db.Column(db.String(20), nullable=False)
 
     def get_station_for_dropdown(self):
-        return {"itemAccessibilityLabelField": self.name, "label": self.name, "value": self.code}
+        return { "itemAccessibilityLabelField": self.name, "label": self.name, "value": self.code }
+    
+    def get_station_for_display(self):
+        # This method returns a subset of station information for display purposes.
+        # Currently it only returns the station name, but it could be expanded in 
+        # the future to include more information if needed.
+        return { "name": self.name }
 
 
 class Line(db.Model):
@@ -46,3 +52,8 @@ class Line(db.Model):
     line_code = db.Column(db.String(10), unique=True, nullable=False)
     start_station_code = db.Column(db.String(10), nullable=False)
 
+    def get_line_for_display(self):
+        # This method returns a subset of line information for display purposes.
+        # Currently it only returns the display name, but it could be expanded in 
+        # the future to include more information if needed.
+        return { "name": self.display_name }

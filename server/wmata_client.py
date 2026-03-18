@@ -1,7 +1,7 @@
 # What inspired this file: https://github.com/code-dot-org/code-dot-org/blob/staging/bin/i18n/utils/crowdin_client.rb
 # Where did I get the python retry logic: https://medium.com/@hudsonbrendon/using-retry-in-http-requests-with-python-5c46e3280893
 # I also considered using the tenacity library, but it seemed like overkill for this use case.
-
+# Rate limited to 10 calls/second and 50,000 calls per day
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry

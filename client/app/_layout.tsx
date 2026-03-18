@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: theme.colors.onPrimary,
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "600",
   },
 });
@@ -25,12 +25,19 @@ const styles = StyleSheet.create({
 export default function RootLayout() {
   return (
     <PaperProvider theme={theme}>
-      <Stack>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+              backgroundColor: theme.colors.primary,
+            },
+          headerTintColor: theme.colors.onPrimary,
+        }}
+      >
         <Stack.Screen
           name="index"
           options={{
             headerTitle: () => (
-              <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+              <View style={{flexDirection: "row", alignItems: "center", gap: 8}}>
                 <Image
                   source={require("../assets/images/logo.png")}
                   style={styles.image}
@@ -38,15 +45,13 @@ export default function RootLayout() {
                 <Text 
                   variant="titleLarge"
                   style={styles.headerTitle}
+                  role="heading"
+                  aria-level={1}
                 >
                   WMATA Train Arrivals
                 </Text>
               </View>
-            ),
-            headerStyle: {
-              backgroundColor: theme.colors.primary,
-            },
-            headerTintColor: theme.colors.onPrimary,
+            )
           }}
         />
       </Stack>

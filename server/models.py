@@ -33,7 +33,7 @@ class Station(db.Model):
     zip = db.Column(db.String(20), nullable=False)
 
     def get_station_for_dropdown(self):
-        return {"label": self.name, "value": self.code}
+        return {"itemAccessibilityLabelField": self.name, "label": self.name, "value": self.code}
 
 
 class Line(db.Model):

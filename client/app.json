@@ -8,6 +8,10 @@
     "scheme": "client",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "extra": {
+      "apiUrl": "http://localhost:5001",
+      "dockerApiUrl": "http://flask-api:5001"
+    },
     "ios": {
       "supportsTablet": true
     },

@@ -19,7 +19,7 @@
 - **Station** — code, name, lat, lon, line codes, address, station_together codes
 - **Line** — line_code, display_name, start/end station codes
 
-### Dynamic (WMATA API)
+### Dynamic (WMATA API)
 
 - **Raw train prediction** — LocationCode, Group, Line, DestinationName, Min, Car
 

@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 50,
-    resizeMode: "contain",
   },
   headerTitle: {
     color: theme.colors.onPrimary,
@@ -41,6 +40,8 @@ export default function RootLayout() {
                 <Image
                   source={require("../assets/images/logo.png")}
                   style={styles.image}
+                  resizeMode="contain"
+                  accessibilityLabel="WMATA logo"
                 />
                 <Text 
                   variant="titleLarge"

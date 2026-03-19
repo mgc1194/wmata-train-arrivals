@@ -68,11 +68,11 @@ export default function Index() {
         handleFetch(fetch(`${API_URL}/api/arrivals/${currentStation.code.join(',')}`), "Failed to fetch train arrivals")
           .then(data => data && setTrainArrivals(data))
       };
-      // Update every 10 seconds to keep the data fresh. 
+      // Update every 20 seconds to keep the data fresh. 
       // The WMATA API updates every 10-20 seconds, so this should be sufficient to provide near real-time updates 
       // without overwhelming the API with requests.
       fetchArrivals();
-      const interval = setInterval(fetchArrivals, 10000);
+      const interval = setInterval(fetchArrivals, 20000);
       return () => clearInterval(interval)
     }
   }, [currentStation]);

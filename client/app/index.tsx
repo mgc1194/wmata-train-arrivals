@@ -33,12 +33,12 @@ export default function Index() {
   const handleFetch = (promise: Promise<Response>, errorMsg: string) => 
     promise
       .then(response => {
-        if (!response.ok) throw new Error(`${errorMsg}: ${response.statusText}`);
+        if (!response.ok) throw new Error(`${errorMsg}: ${response.status}`);
         return response.json();
       })
       .catch(err => {
-        setError(err.message ?? errorMsg);
-        console.error(err);
+        setError(err.message === 'Failed to fetch' ? errorMsg : err.message);
+        throw err;
       }
     );
   // This handler is used to clear any existing errors when the user selects a new station. 
@@ -48,25 +48,23 @@ export default function Index() {
   const handleStationChange = (id: string) => {
     setError(null);
     setStationId(id);
+    handleFetch(fetch(`${API_URL}/api/stations/${id}`), "Failed to fetch station details")
+        .then(setCurrentStation)
+        .catch(() => {})
   };
 
   useEffect(() => {
     handleFetch(fetch(`${API_URL}/api/stations`), "Failed to fetch stations")
-      .then(data => data && setStations(data));
+      .then(setStations)
+      .catch(() => {})
   }, []);
-
-  useEffect(() => {
-    if (stationId) {
-      handleFetch(fetch(`${API_URL}/api/stations/${stationId}`), "Failed to fetch station details")
-        .then(data => data && setCurrentStation(data));
-    }
-  }, [stationId]);
 
   useEffect(() => {
     if (currentStation) {
       const  fetchArrivals = () => {
         handleFetch(fetch(`${API_URL}/api/arrivals/${currentStation.code.join(',')}`), "Failed to fetch train arrivals")
-          .then(data => data && setTrainArrivals(data))
+          .then(setTrainArrivals)
+          .catch(() => {})
       };
       // Update every 20 seconds to keep the data fresh. 
       // The WMATA API updates every 10-20 seconds, so this should be sufficient to provide near real-time updates 

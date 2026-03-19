@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from config import Config
+from sqlalchemy import select
 from models import db, Station, Line
 from seed import seed_stations, seed_lines
 import  wmata_client
@@ -37,27 +38,33 @@ def get_stations():
     # This endpoint returns station data formatted for the dropdown component in the frontend.
     # It only includes the station name and code, but the full station data is stored in the 
     # database for potential future use.
+    
     stations = Station.query.all()
-    return jsonify([station.get_station_for_dropdown() for station in stations])
+
+    if not stations:
+        return jsonify({"error": "No stations found"}), 404
+    else:
+        # In SqlAlchemy, the distinct(MyTable.columnB) method, when present, the Postgresql dialect will 
+        # render a DISTINCT ON (>) construct. However we are using mySQL, which does not support DISTINCT ON.
+        # The workarounds are not straight forward so we are doing the deduplication in Python instead. 
+        # The number of stations is small enough that this should not cause performance issues.
+        # More information here: https://stackoverflow.com/questions/17223174/returning-distinct-rows-in-sqlalchemy-with-sqlite
+        # SQLAlchemy documentation on select here: https://docs.sqlalchemy.org/en/20/core/selectable.html#sqlalchemy.sql.expression.Select.distinct
+        seen = {}
+        for station in stations:
+            if station.name not in seen:
+                seen[station.name] = station
+        return jsonify([station.get_station_for_dropdown() for station in seen.values()])
 
 @app.route("/api/stations/<station_code>", methods=["GET"])
 def get_station(station_code):
     # This endpoint returns station information for a given station code.
     station = Station.query.get(station_code)
-    if station:
-        return jsonify(station.get_station_for_display())
-    else:
+    if not station:        
         return jsonify({"error": "Station not found"}), 404
-
-@app.route("/api/lines/<line_id>", methods=["GET"])
-def get_line(line_id):
-    # This is a placeholder endpoint for line data. The frontend doesn't currently use line data, 
-    # but this could be useful for future features like filtering stations by line or displaying line information.
-    line = Line.query.get(line_id)
-    if line:
-        return jsonify(line.get_line_for_display())
     else:
-        return jsonify({"error": "Line not found"}), 404
+        return jsonify(station.get_station_for_display())
+       
 
 @app.route("/api/arrivals/<station_code>", methods=["GET"])
 def get_train_arrivals(station_code):
@@ -75,6 +82,16 @@ def get_train_arrivals(station_code):
             "car_count": train['Car'],
         }) 
     return jsonify(grouped_trains)
+
+@app.route("/api/lines/<line_id>", methods=["GET"])
+def get_line(line_id):
+    # This is a placeholder endpoint for line data. The frontend doesn't currently use line data, 
+    # but this could be useful for future features like filtering stations by line or displaying line information.
+    line = Line.query.get(line_id)
+    if line:
+        return jsonify(line.get_line_for_display())
+    else:
+        return jsonify({"error": "Line not found"}), 404
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)

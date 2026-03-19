@@ -2,7 +2,7 @@
 # the WMATA API. 
 
 import  wmata_client
-from models import db, Station, Line
+from models import db, Station
 
 
 def seed_stations():

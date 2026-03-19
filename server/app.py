@@ -8,7 +8,7 @@ import  wmata_client
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, resources={r"/*": {"origins":"*"}})
+CORS(app, resources={r"/*": {"origins":"http://localhost:8081"}})
 
 db.init_app(app)
 

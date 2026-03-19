@@ -16,18 +16,6 @@
 **Component Development (Storybook)**
 - Develop and document `NextTrainsTable` and `StationsDropdown` in isolation
 
-### Component Development (Storybook)
-
-[Storybook](https://storybook.js.org/) for React Native allows isolated component development and visual testing outside of the full app context. This is useful for:
-
-- Developing and reviewing new components in isolation before integrating them
-- Documenting component variants and props
-- Catching visual regressions during development
-
-Example stories would cover:
-- `NextTrainsTable` — with different line combinations, ARR/BRD/--- minute values, and empty states
-- `StationsDropdown` — with a full station list, empty list, and selected state
-
 ### Integration Tests
 - Server ↔ Database — verify seeding and station queries
 - Server ↔ WMATA API — verify transformation and grouping of arrival predictions

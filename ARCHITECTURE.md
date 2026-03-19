@@ -8,8 +8,8 @@
 ## Core Components
 
 - **Expo Client**: A React Native mobile app that allows users to select a station and view upcoming train arrivals, refreshed every 20 seconds.
-- **Flask Server**: Handles API requests from the client, fetches live arrival predictions from the WMATA API, and serves static station and line data from the database.
-- **MySQL Database**: Stores static station and line data, seeded once from the WMATA API on startup.
+- **Flask Server**: Handles API requests from the client, fetches live arrival predictions from the WMATA API, and serves static station data from the database.
+- **MySQL Database**: Stores static station data, seeded once from the WMATA API on startup.
 - **WMATA API**: Third-party API that provides real-time train arrival predictions and station/line information.
 
 ## Data types
@@ -17,7 +17,6 @@
 ### Static (MySQL)
 
 - **Station** — code, name, lat, lon, line codes, address, station_together codes
-- **Line** — line_code, display_name, start/end station codes
 
 ### Dynamic (WMATA API)
 

@@ -62,9 +62,13 @@ def get_line(line_id):
 @app.route("/api/arrivals/<station_code>", methods=["GET"])
 def get_train_arrivals(station_code):
     station_prediction_response = wmata_client.get(f"/StationPrediction.svc/json/GetPrediction/{station_code}")
+    # The WMATA API returns a list of individual train predictions. The frontend is designed to display grouped 
+    # predictions by station and platform. We could do this grouping in the frontend, but doing it in the backend 
+    # simplifies the frontend and reduces the amount of data we need to send over the network.
     grouped_trains = {}
     for train in station_prediction_response['Trains']:
-        grouped_trains.setdefault(train['Group'], []).append({
+        key = f"{train['LocationCode']}-{train['Group']}"
+        grouped_trains.setdefault(key, []).append({
             "line": train['Line'],
             "destination_name": train['DestinationName'],
             "minutes": train['Min'],

@@ -39,7 +39,10 @@ class Station(db.Model):
         # This method returns a subset of station information for display purposes.
         # Currently it only returns the station name, but it could be expanded in 
         # the future to include more information if needed.
-        return { "name": self.name }
+        return { 
+            "name": self.name, 
+            "code": [code for code in [self.code, self.station_together_1]if code is not None]
+        }
 
 
 class Line(db.Model):

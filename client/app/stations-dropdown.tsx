@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 
 interface StationsDropdownProps {
   stations: { label: string; value: string }[];
-  stationId: string;
+  stationId: string | undefined;
   setStationId: (id: string) => void;
 }
 

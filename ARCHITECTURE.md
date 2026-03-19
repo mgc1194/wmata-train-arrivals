@@ -3,7 +3,7 @@
 
 ## Architecture Diagram
 
-![App Diagram depicting the Expo client, the Flask server connected to MySQL database, and the WMATA API](app.diagram.png)
+![App Diagram depicting the Expo client, the Flask server connected to MySQL database, and the WMATA API](app-diagram.png)
 
 ## Core Components
 

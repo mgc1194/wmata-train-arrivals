@@ -17,23 +17,39 @@ This project has an [Expo](https://expo.dev) client supported by a [Flask](https
 ## Requirements
 
 - Python 3.9+
-- Node 22+ 
+- Node 22+
 - MySQL
 - Git
+- Docker Desktop (for Docker setup)
 - WMATA API key (Optional but recommended. The app comes with a [demo API key](https://developer.wmata.com/products))
 
 ## Get started
 
-1. Clone and Setup
-   
-   ```bash
+You can run the app in two ways:
+
+### Docker setup (recommended)
+
+1. Clone and run setup
+```bash
+   git clone https://github.com/mgc1194/wmata-train-arrivals.git
+   cd wmata-train-arrivals
+   ./setup.sh
+```
+
+2. Navigate to [http://localhost:8081](http://localhost:8081)
+
+The API will be available at [http://localhost:5001](http://localhost:5001)
+
+### Manual setup
+
+1. Clone and setup
+```bash
    # Clone the repo
    git clone https://github.com/mgc1194/wmata-train-arrivals.git
    cd wmata-train-arrivals
 
    # Setup the database and .env file
-   ./setup.sh
-   # Update the demo WMATA API key in the generated .env file to use your own API if you have one
+   ./manual-setup.sh
 
    # Create virtual environment and install server dependencies
    cd server
@@ -46,26 +62,19 @@ This project has an [Expo](https://expo.dev) client supported by a [Flask](https
    cd client
    npm install
    cd ..
-   ```
+```
 
 2. Start the Server (Terminal 1)
-
-   ```bash
+```bash
    cd wmata-train-arrivals/server && source .venv/bin/activate && flask run
-   ```
+```
 
 3. Start the Client (Terminal 2)
+```bash
+   cd wmata-train-arrivals/client && npx expo start --web
+```
 
-   ```bash
-   cd wmata-train-arrivals/client && npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Navigate to [http://localhost:8081](http://localhost:8081)
 
 ## API Documentation
 See [API.md](API.md) for the full API documentation, available endpoints, and expected responses
@@ -73,10 +82,11 @@ See [API.md](API.md) for the full API documentation, available endpoints, and ex
 ## Architecture
 See [ARCHITECTURE.md](ARCHITECTURE.md) for a service overview and system diagram.
 
+## Testing
+See [TEST.md](TEST.md) for an outline of the testing strategy.
+
 ## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-- [Paper documentation](https://oss.callstack.com/react-native-paper/docs/guides/getting-started): All React Native Paper guides and components.
+- [Expo documentation](https://docs.expo.dev/)
+- [Flask documentation](https://flask.palletsprojects.com/en/stable/)
+- [React Native Paper documentation](https://oss.callstack.com/react-native-paper/docs/guides/getting-started)

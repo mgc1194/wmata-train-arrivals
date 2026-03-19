@@ -1,56 +1,44 @@
 #!/bin/bash
 
 cd "$(dirname "$0")"
- 
-echo "=== WMATA App Database Setup ==="
+
+echo "=== WMATA App Setup ==="
 echo ""
- 
-# Check if .env already exists
+
 if [ -f .env ]; then
     echo "⚠️  .env file already exists!"
     read -p "Overwrite existing .env? (y/N): " -n 1 -r
     echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        cp .env.template .env
+        echo "✓ .env file created from template"
+        echo ""
+
+        read -p "Enter your WMATA API key (press Enter to use demo key): " -r API_KEY
+        echo ""
+
+        if [ -z "$API_KEY" ]; then
+            API_KEY="e13626d03d8e4c03ac07f95541b3091b"
+            echo "Using demo API key."
+        else
+            echo "Using provided API key."
+        fi
+
+        sed -i '' "s/WMATA_API_KEY=.*/WMATA_API_KEY=$API_KEY/" .env
+    else
         echo "Keeping existing .env file."
-        exit 0
     fi
+else
+    cp .env.template .env
+    echo "✓ .env file created from template"
 fi
- 
-echo "Creating database..."
+
 echo ""
- 
-# Run setup SQL
-mysql -u root <<EOF
-CREATE DATABASE IF NOT EXISTS wmata CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-FLUSH PRIVILEGES;
-EOF
- 
-if [ $? -ne 0 ]; then
-    echo "❌ Database setup failed!"
-    echo "Make sure MySQL is running and you can connect as root."
-    echo "Try: mysql -u root"
-    exit 1
-fi
- 
-# Create .env file
-cat > .env << EOF
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_NAME=wmata
-DB_USER=root
-DB_PASSWORD=
- 
-FLASK_DEBUG=True
-FLASK_RUN_PORT=5001
- 
-WMATA_API_KEY="e13626d03d8e4c03ac07f95541b3091b"
-EOF
- 
+docker compose build
+docker compose run expo npm install
+docker compose up -d
+
 echo ""
-echo "✓ Database setup complete!"
-echo "✓ .env file created"
-echo ""
-echo "Next steps:"
-echo "  source .venv/bin/activate"
-echo "  pip install -r requirements.txt"
-echo "  python app.py"
+echo "✓ Setup complete!"
+echo "Navigate to http://localhost:8081"
+echo "API available at http://localhost:5001"

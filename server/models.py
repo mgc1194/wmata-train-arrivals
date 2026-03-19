@@ -4,7 +4,7 @@
 # for station and line info every time we want to display it. 
 # It is more reliable and faster than making API calls for this data on demand.
 #
-# All api fields are included in the models, but only a subset of 
+# All WMATA API fields are included in the models, but only a subset of 
 # them are used in the application. This is intentional to allow for 
 # future expansion of the application without needing to change the models.
 
@@ -32,31 +32,33 @@ class Station(db.Model):
     street = db.Column(db.String(200), nullable=False)
     zip = db.Column(db.String(20), nullable=False)
 
-    def get_station_for_dropdown(self):
+    def to_summary(self):
         return { "itemAccessibilityLabelField": self.name, "label": self.name, "value": self.code }
     
-    def get_station_for_display(self):
-        # This method returns a subset of station information for display purposes.
-        # Currently it only returns the station name, but it could be expanded in 
+    def to_detail(self):
+        # This method returns a subset of station information.
+        # Currently it only returns the station name and codes, but it could be expanded in 
         # the future to include more information if needed.
         return { 
             "name": self.name, 
             "code": [code for code in [self.code, self.station_together_1]if code is not None]
         }
 
-
-class Line(db.Model):
-    __tablename__ = "metro_lines"
-    id = db.Column(db.Integer, primary_key=True)
-    display_name = db.Column(db.String(10), unique=True, nullable=False)
-    end_station_code = db.Column(db.String(10), nullable=False)
-    internal_destination_1 = db.Column(db.String(100), nullable=True)
-    internal_destination_2 = db.Column(db.String(100), nullable=True)
-    line_code = db.Column(db.String(10), unique=True, nullable=False)
-    start_station_code = db.Column(db.String(10), nullable=False)
-
-    def get_line_for_display(self):
-        # This method returns a subset of line information for display purposes.
-        # Currently it only returns the display name, but it could be expanded in 
-        # the future to include more information if needed.
-        return { "name": self.display_name }
+# # The line model is currently not used in the application, but it is included for potential future features 
+# # that may require line information.
+#
+# class Line(db.Model):
+#     __tablename__ = "metro_lines"
+#     id = db.Column(db.Integer, primary_key=True)
+#     display_name = db.Column(db.String(10), unique=True, nullable=False)
+#     end_station_code = db.Column(db.String(10), nullable=False)
+#     internal_destination_1 = db.Column(db.String(100), nullable=True)
+#     internal_destination_2 = db.Column(db.String(100), nullable=True)
+#     line_code = db.Column(db.String(10), unique=True, nullable=False)
+#     start_station_code = db.Column(db.String(10), nullable=False)
+#
+#     def to_summary(self):
+#         # This method returns a subset of line information for display purposes.
+#         # Currently it only returns the display name, but it could be expanded in 
+#         # the future to include more information if needed.
+#         return { "name": self.display_name }

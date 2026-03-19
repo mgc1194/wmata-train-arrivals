@@ -29,20 +29,22 @@ def seed_stations():
 
     db.session.commit()
 
-def seed_lines():
-    response = wmata_client.get("/Rail.svc/json/jLines")
-    lines_data = response['Lines']
+# # The line data is currently not used in the application, 
+# # but it is included for potential future features that may require line information.
+# def seed_lines():
+#     response = wmata_client.get("/Rail.svc/json/jLines")
+#     lines_data = response['Lines']
 
-    for l in lines_data:
-        line = Line(
-            display_name = l['DisplayName'],
-            end_station_code = l['EndStationCode'],
-            internal_destination_1 = l['InternalDestination1'] or None,
-            internal_destination_2 = l['InternalDestination2'] or None,
-            line_code = l['LineCode'],
-            start_station_code = l['StartStationCode']
-        )
-        db.session.add(line)
+#     for l in lines_data:
+#         line = Line(
+#             display_name = l['DisplayName'],
+#             end_station_code = l['EndStationCode'],
+#             internal_destination_1 = l['InternalDestination1'] or None,
+#             internal_destination_2 = l['InternalDestination2'] or None,
+#             line_code = l['LineCode'],
+#             start_station_code = l['StartStationCode']
+#         )
+#         db.session.add(line)
 
-    db.session.commit()
+#     db.session.commit()
 

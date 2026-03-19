@@ -67,6 +67,12 @@ In the output, you'll find options to open the app in a
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
+## API Documentation
+See [API.md](API.md) for the full API documentation, available endpoints, and expected responses
+
+## Architecture
+See [ARCHITECTURE.md](ARCHITECTURE.md) for a service overview and system diagram.
+
 ## Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
